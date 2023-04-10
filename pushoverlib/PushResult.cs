@@ -20,11 +20,6 @@ public class PushResult {
         return Receipt != null;
     }
 
-    public string AssertReceipt() {
-        if (Receipt == null) throw new NullReferenceException("Receipt is null");
-        return Receipt!;
-    }
-    
     public PushResult(JsonElement json) {
         try {
             Status = json.GetProperty("status").GetInt32();

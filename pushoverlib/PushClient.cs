@@ -8,6 +8,10 @@ public class PushClient {
         return await PushCommunicator.SendAsync(data.AddNeeded(apiToken, userToken, msg));
     }
 
+    public async Task<PushReceiptResponse> GetReceipt(PushResult result){
+        return await PushCommunicator.GetReceipt(apiToken, result.Receipt!);
+    }
+
     public PushClient(string apiToken, string userToken) {
         this.apiToken = apiToken;
         this.userToken = userToken;
