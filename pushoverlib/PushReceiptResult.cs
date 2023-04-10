@@ -12,7 +12,7 @@ public class PushReceiptResult {
     public bool Expired { get; private set; }
     public long ExpiresAt { get; private set; }
 
-    public PushReceiptResult(JsonElement json){
+    public PushReceiptResult(JsonElement json) {
         Status = json.GetProperty("status").GetInt32();
         Acknowledged = json.GetProperty("acknowledged").GetInt32() == 1;
         AcknowledgedAt =  Acknowledged ? json.GetProperty("acknowledged_at").GetInt64() : null;

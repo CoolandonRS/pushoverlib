@@ -2,24 +2,23 @@
 
 namespace pushoverlib;
 
-internal static class PushCommunicator{
+internal static class PushCommunicator {
     private static readonly HttpClient client = new HttpClient();
 
-    public static async Task<PushResult> ConfirmSendAsync(PushData data){
+    public static async Task<PushResult> ConfirmSendAsync(PushData data) {
         var result = await SendAsync(data);
-        if (!result.IsSuccess())
-            throw new PushRequestException("Failed to send with errors: " + string.Join("; ", result.Errors));
+        if (!result.IsSuccess()) throw new PushRequestException("Failed to send with errors: " + string.Join("; ", result.Errors));
         return result;
     }
 
-    public static async Task<PushResult> SendAsync(PushData data){
+    public static async Task<PushResult> SendAsync(PushData data) {
         HttpContent content;
-        if (!data.Attachment?.IsBase64() ?? true){
+        if (!data.Attachment?.IsBase64() ?? true) {
             content = new FormUrlEncodedContent(data.ToDict());
         }
         else{
             var form = new MultipartFormDataContent();
-            foreach (var kvp in data.ToDict()){
+            foreach (var kvp in data.ToDict()) {
                 form.Add(new StringContent(kvp.Value), kvp.Key);
             }
 
@@ -34,7 +33,7 @@ internal static class PushCommunicator{
         return new PushResult(JsonSerializer.SerializeToElement(await httpResponse.Content.ReadAsStringAsync()));
     }
 
-    public static async Task<PushReceiptResult> GetReceiptResult(string token, string receipt){
+    public static async Task<PushReceiptResult> GetReceiptResult(string token, string receipt) {
         var httpResponse = await client.GetAsync("https://api.pushover.net/1/receipts/" + receipt + ".json?token=" + token);
         var statusCode = (int)httpResponse.StatusCode;
         if ((statusCode / 100) != 2) throw new PushException("Pushover failed to get Receipt JSON");
