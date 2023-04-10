@@ -15,13 +15,11 @@ internal static class PushCommunicator {
         HttpContent content;
         if (!data.Attachment?.IsBase64() ?? true) {
             content = new FormUrlEncodedContent(data.ToDict());
-        }
-        else{
+        } else {
             var form = new MultipartFormDataContent();
             foreach (var kvp in data.ToDict()) {
                 form.Add(new StringContent(kvp.Value), kvp.Key);
             }
-
             form.Add(new ByteArrayContent(data.Attachment.Data));
             content = form;
         }
@@ -37,7 +35,6 @@ internal static class PushCommunicator {
         var httpResponse = await client.GetAsync("https://api.pushover.net/1/receipts/" + receipt + ".json?token=" + token);
         var statusCode = (int)httpResponse.StatusCode;
         if ((statusCode / 100) != 2) throw new PushException("Pushover failed to get Receipt JSON");
-        
         return new PushReceiptResult(JsonSerializer.SerializeToElement(await httpResponse.Content.ReadAsStringAsync()));
     }
 
