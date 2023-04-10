@@ -10,6 +10,9 @@
       <Compile Update="PushRequestException.cs">
         <DependentUpon>PushException.cs</DependentUpon>
       </Compile>
+      <Compile Update="PushDataBuilder.cs">
+        <DependentUpon>PushData.cs</DependentUpon>
+      </Compile>
     </ItemGroup>
 
 </Project>
