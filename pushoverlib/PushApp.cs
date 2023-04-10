@@ -11,11 +11,11 @@ public class PushApp {
         return new PushClient(apiToken, userToken);
     }
     
-    public async Task<PushReceiptResult> GetReceiptResult(PushResult result){
+    public async Task<PushReceiptResult> GetReceiptResult(PushResult result) {
         return await PushCommunicator.GetReceiptResult(apiToken, result.Receipt!);
     }
     
-    public async Task CancelReceipt(PushResult result){
+    public async Task CancelReceipt(PushResult result) {
         await PushCommunicator.CancelReceipt(apiToken, result.Receipt!);
     }
 
