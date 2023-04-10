@@ -1,4 +1,4 @@
-﻿namespace pushoverlib; 
+﻿namespace CoolandonRS.pushoverlib; 
 
 public class PushDataBuilder {
     private PushData.PushPriority? priority = null; 

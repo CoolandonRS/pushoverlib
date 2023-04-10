@@ -1,6 +1,6 @@
 ﻿using System.Text.Json;
 
-namespace pushoverlib;
+namespace CoolandonRS.pushoverlib;
 
 internal static class PushCommunicator {
     private static readonly HttpClient client = new HttpClient();

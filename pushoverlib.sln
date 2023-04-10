@@ -2,6 +2,8 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "pushoverlib", "pushoverlib\pushoverlib.csproj", "{73CCC5C3-E6F9-45B7-930D-D71674F8C5A4}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "pushoverlib-tests", "pushoverlib-tests\pushoverlib-tests.csproj", "{5B4D196A-6CBE-4374-AEC3-67ED6268E9E7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -12,5 +14,9 @@ Global
 		{73CCC5C3-E6F9-45B7-930D-D71674F8C5A4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{73CCC5C3-E6F9-45B7-930D-D71674F8C5A4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{73CCC5C3-E6F9-45B7-930D-D71674F8C5A4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5B4D196A-6CBE-4374-AEC3-67ED6268E9E7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5B4D196A-6CBE-4374-AEC3-67ED6268E9E7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5B4D196A-6CBE-4374-AEC3-67ED6268E9E7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5B4D196A-6CBE-4374-AEC3-67ED6268E9E7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

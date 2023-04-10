@@ -1,4 +1,4 @@
-﻿namespace pushoverlib; 
+﻿namespace CoolandonRS.pushoverlib; 
 
 public class PushAttachment {
     public readonly byte[] Data;

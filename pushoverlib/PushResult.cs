@@ -1,6 +1,6 @@
 ﻿using System.Text.Json;
 
-namespace pushoverlib; 
+namespace CoolandonRS.pushoverlib; 
 
 public class PushResult {
     public int Status { get; private set; }

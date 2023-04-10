@@ -1,6 +1,4 @@
-﻿using System.Runtime.CompilerServices;
-
-namespace pushoverlib; 
+﻿namespace CoolandonRS.pushoverlib; 
 
 public class PushData {
     // required

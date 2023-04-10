@@ -4,11 +4,23 @@
         <TargetFramework>net7.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+        <Version>1.0.0-beta</Version>
+        <Title>PushoverLib</Title>
+        <Description>C# Library for integration with Pushover, a push notification service</Description>
+        <RepositoryUrl>https://github.com/CoolandonRS/pushoverlib</RepositoryUrl>
+        <RepositoryType>git</RepositoryType>
+        <RootNamespace>CoolandonRS.pushoverlib</RootNamespace>
+        <Authors>CoolandonRS</Authors>
+        <PackageId>CoolandonRS.pushoverlib</PackageId>
     </PropertyGroup>
 
     <ItemGroup>
       <Compile Update="PushRequestException.cs">
         <DependentUpon>PushException.cs</DependentUpon>
+      </Compile>
+      <Compile Update="PushDataBuilder.cs">
+        <DependentUpon>PushData.cs</DependentUpon>
       </Compile>
     </ItemGroup>
 
