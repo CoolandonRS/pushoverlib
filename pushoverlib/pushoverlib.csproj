@@ -23,5 +23,8 @@
         <DependentUpon>PushData.cs</DependentUpon>
       </Compile>
     </ItemGroup>
-
+    
+    <ItemGroup>
+        <InternalsVisibleTo Include="pushoverlib_tests" />
+    </ItemGroup>
 </Project>
