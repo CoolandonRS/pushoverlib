@@ -21,7 +21,7 @@ internal static class PushCommunicator {
 
     internal static async Task<PushResult> SendAsync(PushData data) {
         HttpContent content;
-        if (!data.Attachment?.IsBase64() ?? true) {
+        if (data.Attachment?.IsBase64() ?? true) {
             content = new FormUrlEncodedContent(data.ToDict());
         } else {
             var form = new MultipartFormDataContent();
@@ -35,20 +35,20 @@ internal static class PushCommunicator {
         var httpResponse = await client.PostAsync(url + "messages.json", content);
         var statusCode = (int)httpResponse.StatusCode;
         // who let this python syntax into my c#
-        if ((statusCode / 100) is not (2 or 4)) throw new PushException("Pushover failed to send JSON");
-        return new PushResult(JsonSerializer.SerializeToElement(await httpResponse.Content.ReadAsStringAsync()));
+        if ((statusCode / 100) is not (2 or 4)) throw new PushServerException("Pushover failed to send JSON");
+        return new PushResult(JsonDocument.Parse(await httpResponse.Content.ReadAsStringAsync()).RootElement);
     }
 
     internal static async Task<PushReceiptResult> GetReceiptResult(string token, string receipt) {
         var httpResponse = await client.GetAsync(url + "1/receipts/" + receipt + ".json?token=" + token);
         var statusCode = (int)httpResponse.StatusCode;
-        if ((statusCode / 100) != 2) throw new PushException("Pushover failed to get Receipt JSON");
-        return new PushReceiptResult(JsonSerializer.SerializeToElement(await httpResponse.Content.ReadAsStringAsync()));
+        if ((statusCode / 100) != 2) throw new PushServerException("Pushover failed to get Receipt JSON");
+        return new PushReceiptResult(JsonDocument.Parse(await httpResponse.Content.ReadAsStringAsync()).RootElement);
     }
 
     internal static async Task CancelReceipt(string token, string receipt) {
         var httpResponse = await client.PostAsync(url + "1/receipts/" + receipt + "/cancel.json", new FormUrlEncodedContent(new Dictionary<string, string>() { { "token", token } }));
         var statusCode = (int)httpResponse.StatusCode;
-        if ((statusCode / 100) != 2) throw new PushException("Pushover sent failure status");
+        if ((statusCode / 100) != 2) throw new PushServerException("Pushover sent failure status");
     }
 }

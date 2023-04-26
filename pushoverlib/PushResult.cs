@@ -1,23 +1,35 @@
 ﻿using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace CoolandonRS.pushoverlib; 
 
 public class PushResult {
-    public int Status { get; private set; }
-    public string Request { get; private set; }
-    public string[] Errors { get; private set; }
+    [JsonInclude, JsonPropertyName("receipt")]
     public string? Receipt { get; private set; }
 
+    [JsonInclude, JsonPropertyName("errors")]
+    public string[]? Errors { get; private set; }
+
+    [JsonInclude, JsonPropertyName("status")]
+    public int Status { get; private set; }
+
+    [JsonInclude, JsonPropertyName("request")]
+    public string Request { get; private set; }
+
     public bool IsSuccess() {
-        return Status == 1 && Errors.Length == 0;
+        return Status == 1 && Errors == null;
     }
 
     public bool HasErrors() {
-        return Status != 1 || Errors.Length > 0;
+        return Status != 1 || Errors != null;
     }
 
     public bool HasReceipt() {
         return Receipt != null;
+    }
+
+    public string ToJsonString() {
+        return JsonSerializer.Serialize(this, new JsonSerializerOptions { DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull });
     }
 
     public PushResult(JsonElement json) {
@@ -25,15 +37,15 @@ public class PushResult {
             Status = json.GetProperty("status").GetInt32();
             Request = json.GetProperty("request").GetString()!;
             try {
-                var arr = json.GetProperty("errors");
-                var len = arr.GetArrayLength();
-                var list = new List<string>(1);
-                for (int i = 0; i < len - 1; i++) {
-                    list.Add(arr[i].GetString()!);
+                var jsonArr = json.GetProperty("errors");
+                var len = jsonArr.GetArrayLength();
+                var arr = new string[len];
+                for (var i = 0; i < len; i++) {
+                    arr[i] = jsonArr[i].GetString()!;
                 }
-                Errors = list.ToArray();
+                Errors = arr;
             } catch (KeyNotFoundException) {
-                Errors = Array.Empty<string>();
+                Errors = null;
             }
             try {
                 Receipt = json.GetProperty("receipt").GetString()!;
@@ -41,7 +53,7 @@ public class PushResult {
                 Receipt = null;
             }
         } catch (Exception e) {
-            throw new InvalidOperationException("Invalid JSON", e);
+            throw new PushResponseException("Invalid JSON", e);
         }
     }
 }

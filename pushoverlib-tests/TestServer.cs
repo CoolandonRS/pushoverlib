@@ -7,6 +7,7 @@ namespace pushoverlib_tests;
 internal class TestServer {
     public int Port { get; private set; }
     private HttpListener listener;
+    private Action<HttpListenerRequest>? action;
     public Response Resp { get; private set; } = new Response(500, "No response set");
 
     public class Response {
@@ -29,14 +30,14 @@ internal class TestServer {
     }
 
     private void Receive() {
-        listener.BeginGetContext(new AsyncCallback(ListenerCallback), listener);
+        listener.BeginGetContext(ListenerCallback, listener);
     }
 
     private void ListenerCallback(IAsyncResult result) {
         if (!listener.IsListening) return;
         
         var context = listener.EndGetContext(result);
-        var request = context.Request;
+        this.action?.Invoke(context.Request);
         var response = context.Response;
         response.StatusCode = Resp.StatusCode;
         response.ContentType = "application/json";
@@ -53,10 +54,21 @@ internal class TestServer {
     public void SetResponse(int statusCode, string msg = "") {
         Resp = new Response(statusCode, msg);
     }
+
+    public void RegisterRequestListener(Action<HttpListenerRequest> action) {
+        if (this.action != null) throw new InvalidOperationException("Already Registered");
+        this.action = action;
+    }
+
+    public void UnregisterRequestListener() {
+        if (this.action == null) throw new InvalidOperationException("Not Registered");
+        this.action = null;
+    }
     
     public TestServer(int port, bool startOnConstruct = true) {
         this.Port = port;
         this.listener = new HttpListener();
+        this.action = null;
         listener.Prefixes.Add("http://127.0.0.1:" + port + "/");
         if (startOnConstruct) Start();
     }
