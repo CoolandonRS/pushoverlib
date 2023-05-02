@@ -1,9 +1,13 @@
 ﻿using System.Buffers.Text;
 using System.Runtime.InteropServices;
 
+using static CoolandonRS.pushoverlib.PushAttachment.Types;
+
 namespace pushoverlib_tests; 
 
 public class PushAttachmentTests {
+    private const PushAttachment.Types Base64 = PushAttachment.Types.Base64; // to solve ambiguity
+    
     [Test]
     public void EvaluateImageType([Range(1, 6, 1)] int typeInt) {
         var type = (PushAttachment.Types)typeInt;
@@ -14,8 +18,8 @@ public class PushAttachmentTests {
     [Test]
     public void EvaluateTypeOddities() {
         Assert.Multiple(() => {
-            Assert.That(new PushAttachment(new byte[1], PushAttachment.Types.Base64, "").EvaluateType(), Is.EqualTo("attachment_base64"), "Base64 fail");
-            Assert.That(new PushAttachment(new byte[1], PushAttachment.Types.SvgXml, "").EvaluateType(), Is.EqualTo("image/svg+xml"), "SvgXml fail");
+            Assert.That(new PushAttachment(new byte[1], Base64, "").EvaluateType(), Is.EqualTo("attachment_base64"), "Base64 fail");
+            Assert.That(new PushAttachment(new byte[1], SvgXml, "").EvaluateType(), Is.EqualTo("image/svg+xml"), "SvgXml fail");
         });
     }
 
@@ -23,18 +27,18 @@ public class PushAttachmentTests {
     public void IsBase64() {
         Assert.Multiple(() => {
             Assert.That(new PushAttachment(new byte[1], PushAttachment.Types.Base64, "").IsBase64(), Is.True, "Truthy base64 failure");
-            Assert.That(new PushAttachment(new byte[1], PushAttachment.Types.Png, "").IsBase64(), Is.False, "Falsey base64 success");
+            Assert.That(new PushAttachment(new byte[1], Png, "").IsBase64(), Is.False, "Falsey base64 success");
         });
     }
 
     [Test]
     public void GetData() {
         var data = new byte[] { 3 };
-        Assert.That(new PushAttachment(data, PushAttachment.Types.Gif, "").GetData(), Is.EqualTo(data), "Data mismatch");
+        Assert.That(new PushAttachment(data, Gif, "").GetData(), Is.EqualTo(data), "Data mismatch");
     }
 
     [Test]
     public void GetTypes() {
-        Assert.That(new PushAttachment(new byte[1], PushAttachment.Types.Webp, "").GetTypes(), Is.EqualTo(PushAttachment.Types.Webp), "Type mismatch");
+        Assert.That(new PushAttachment(new byte[1], Webp, "").GetTypes(), Is.EqualTo(Webp), "Type mismatch");
     }
 }  

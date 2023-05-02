@@ -57,13 +57,15 @@ public class PushData {
         AddToDict("attachment_type", Attachment?.EvaluateType());
         AddToDict("device", Device);
         AddBoolToDict("html", Html);
-        AddToDict("priority", Priority.ToString());
+        if (Priority != null) AddToDict("priority", ((int) Priority).ToString());
         AddToDict("sound", Sound?.Evaluate());
         AddToDict("timestamp", Timestamp?.ToString());
         AddToDict("title", Title);
         AddToDict("url", Url?.Url);
         AddToDict("url_title", Url?.Title);
-
+        if (Priority != PushPriority.RequireAck) return dict;
+        AddToDict("retry", Retry.ToString(), true);
+        AddToDict("expire", Expire.ToString(), true);
         return dict;
     }
 
