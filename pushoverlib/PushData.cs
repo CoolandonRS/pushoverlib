@@ -69,8 +69,7 @@ public class PushData {
         return dict;
     }
 
-    public PushData(PushPriority? priority, string? title = null, string? device = null, long? timestamp = null,
-        PushAttachment? attachment = null, bool? html = null, PushSound? sound = null, PushUrl? url = null,
+    public PushData(PushPriority? priority = null, string? title = null, string? device = null, long? timestamp = null, PushAttachment? attachment = null, bool? html = null, PushSound? sound = null, PushUrl? url = null,
         int? retry = null, int? expire = null) {
         Priority = priority;
         Title = title;
@@ -82,7 +81,7 @@ public class PushData {
         Url = url;
         
         if (Priority != PushPriority.RequireAck) return;
-        if (retry == null || expire == null) throw new PushRequestException("Priority 2 messages must have both retry and expire set");
+        if (retry == null || expire == null) throw new PushRequestException("RequireAck messages must have both retry and expire set");
         if (retry < 30) throw new PushRequestException("Retry can not be lower then 30");
         if (expire > 10800) throw new PushRequestException("Expire can not be higher then 10800");
         Retry = retry;
