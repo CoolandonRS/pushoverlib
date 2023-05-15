@@ -10,7 +10,7 @@ public class PushAttachment {
         return Type switch {
             Types.Base64 => "attachment_base64",
             Types.SvgXml => "image/svg+xml",
-            _ => "image/" + Type
+            _ => "image/" + Type.ToString().ToLower()
         };
     }
 
