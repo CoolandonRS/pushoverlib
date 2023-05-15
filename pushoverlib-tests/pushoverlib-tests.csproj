@@ -5,6 +5,7 @@
         <RootNamespace>pushoverlib_tests</RootNamespace>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
+        <AssemblyName>pushoverlib_tests</AssemblyName>
 
         <IsPackable>false</IsPackable>
         <IsTestProject>true</IsTestProject>

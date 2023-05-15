@@ -1,5 +1,5 @@
 ﻿namespace CoolandonRS.pushoverlib; 
-
+// /
 public class PushData {
     // required
     public string? ApiToken { get; private set; }
@@ -15,6 +15,8 @@ public class PushData {
     public readonly bool? Html;
     public readonly PushSound? Sound;
     public readonly PushUrl? Url;
+    public readonly int? Retry;
+    public readonly int? Expire;
 
 
     public enum PushPriority {
@@ -55,17 +57,20 @@ public class PushData {
         AddToDict("attachment_type", Attachment?.EvaluateType());
         AddToDict("device", Device);
         AddBoolToDict("html", Html);
-        AddToDict("priority", Priority.ToString());
+        if (Priority != null) AddToDict("priority", ((int) Priority).ToString());
         AddToDict("sound", Sound?.Evaluate());
         AddToDict("timestamp", Timestamp?.ToString());
         AddToDict("title", Title);
         AddToDict("url", Url?.Url);
         AddToDict("url_title", Url?.Title);
-
+        if (Priority != PushPriority.RequireAck) return dict;
+        AddToDict("retry", Retry.ToString(), true);
+        AddToDict("expire", Expire.ToString(), true);
         return dict;
     }
 
-    public PushData(PushPriority? priority, string? title = null, string? device = null, long? timestamp = null, PushAttachment? attachment = null, bool? html = null, PushSound? sound = null, PushUrl? url = null) {
+    public PushData(PushPriority? priority = null, string? title = null, string? device = null, long? timestamp = null, PushAttachment? attachment = null, bool? html = null, PushSound? sound = null, PushUrl? url = null,
+        int? retry = null, int? expire = null) {
         Priority = priority;
         Title = title;
         Device = device;
@@ -74,5 +79,12 @@ public class PushData {
         Html = html;
         Sound = sound;
         Url = url;
+        
+        if (Priority != PushPriority.RequireAck) return;
+        if (retry == null || expire == null) throw new PushRequestException("RequireAck messages must have both retry and expire set");
+        if (retry < 30) throw new PushRequestException("Retry can not be lower then 30");
+        if (expire > 10800) throw new PushRequestException("Expire can not be higher then 10800");
+        Retry = retry;
+        Expire = expire;
     }
 }

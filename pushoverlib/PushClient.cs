@@ -4,7 +4,7 @@ public class PushClient {
     private string apiToken;
     private string userToken;
 
-    public async Task<PushResult> SendAsync(string msg, PushData? data = null) {
+    public async Task<PushResult> Send(string msg, PushData? data = null) {
         return await PushCommunicator.SendAsync((data ?? new PushDataBuilder().Build()).AddNeeded(apiToken, userToken, msg));
     }
 
