@@ -32,7 +32,7 @@ internal static class PushCommunicator {
             content = form;
         }
 
-        var httpResponse = await client.PostAsync(url + "messages.json", content);
+        var httpResponse = await client.PostAsync(url + "1/messages.json", content);
         var statusCode = (int)httpResponse.StatusCode;
         // who let this python syntax into my c#
         if ((statusCode / 100) is not (2 or 4)) throw new PushServerException("Pushover failed to send JSON");
