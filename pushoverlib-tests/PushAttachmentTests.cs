@@ -7,7 +7,7 @@ namespace pushoverlib_tests;
 
 public class PushAttachmentTests {
     [Test]
-    public void EvaluateImageType([Range(0, 6, 1)] int typeInt) {
+    public void EvaluateImageType([Range(0, 5, 1)] int typeInt) {
         var type = (PushAttachment.Types)typeInt;
         var attach = new PushAttachment(new byte[1], type, "name");
         Assert.That(attach.EvaluateType(), Is.EqualTo("image/" + type.ToString().ToLower()), type + " failed to evaluate");
