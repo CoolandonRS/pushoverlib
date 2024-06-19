@@ -20,15 +20,16 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <Compile Update="PushRequestException.cs">
-        <DependentUpon>PushException.cs</DependentUpon>
-      </Compile>
-      <Compile Update="PushResponseException.cs">
-        <DependentUpon>PushException.cs</DependentUpon>
-      </Compile>
-      <Compile Update="PushServerException.cs">
-        <DependentUpon>PushException.cs</DependentUpon>
-      </Compile>
+        <Compile Update="PushRequestException.cs">
+          <DependentUpon>PushException.cs</DependentUpon>
+        </Compile>
+        <Compile Update="PushResponseException.cs">
+          <DependentUpon>PushException.cs</DependentUpon>
+        </Compile>
+        <Compile Update="PushServerException.cs">
+          <DependentUpon>PushException.cs</DependentUpon>
+        </Compile>
+        <None Include="../README.md" Pack="true" PackagePath="\"/>
     </ItemGroup>
     
     <ItemGroup>
