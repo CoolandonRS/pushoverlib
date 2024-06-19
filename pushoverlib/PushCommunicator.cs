@@ -1,4 +1,6 @@
-﻿using System.Text.Json;
+﻿using System.Net.Http.Headers;
+using System.Net.Mime;
+using System.Text.Json;
 
 namespace CoolandonRS.pushoverlib;
 
@@ -21,16 +23,22 @@ internal static class PushCommunicator {
 
     internal static async Task<PushResult> SendAsync(PushData data) {
         HttpContent content;
-        if (data.Attachment?.IsBase64() ?? true) {
+        if (data.Attachment?.IsBase64 ?? true) {
             content = new FormUrlEncodedContent(data.ToDict());
         } else {
             var form = new MultipartFormDataContent();
             foreach (var kvp in data.ToDict()) {
                 form.Add(new StringContent(kvp.Value), kvp.Key);
             }
-            form.Add(new ByteArrayContent(data.Attachment.Data));
+
+            var attachmentContent = new ByteArrayContent(data.Attachment.Data);
+            attachmentContent.Headers.ContentType = MediaTypeHeaderValue.Parse(data.Attachment.EvaluateType());
+            form.Add(attachmentContent, "attachment", data.Attachment.Filename);
+            
             content = form;
         }
+        await File.WriteAllBytesAsync(@"C:\Users\bstevic\RiderProjects\pushoverlib\pushoverlib-practical-tests\request.txt", await content.ReadAsByteArrayAsync());
+        Console.WriteLine(await content.ReadAsStringAsync());
 
         var httpResponse = await client.PostAsync(url + "1/messages.json", content);
         var statusCode = (int)httpResponse.StatusCode;

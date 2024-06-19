@@ -25,33 +25,56 @@ public class PushDataTests {
 
     [Test]
     public void DictTests() {
-        
+        Assert.Multiple(() => {
+            Assert.That(new PushData().AddNeeded("api", "usr", "msg").ToDict(), Is.EqualTo(new Dictionary<string,string>() { { "token", "api"}, {"user", "usr"}, {"message", "msg"} }), "Base dict fail");
+        });
     }
 
     [Test]
-    public void Constructor() {
-        // In each instance, the .Build() calls the PushData constructor. This is where we check for breaks.
+    public void Verify() {
         Assert.Multiple(() => {
             Assert.Throws(typeof(PushRequestException), () => {
-                new PushDataBuilder().Priority(PushData.PushPriority.RequireAck).Build();
+                new PushData {
+                    Priority = PushData.PushPriority.RequireAck
+                }.Verify();
             }, "RequireAck success without retry/expire");
             Assert.Throws(typeof(PushRequestException), () => {
-                new PushDataBuilder().Priority(PushData.PushPriority.RequireAck).Retry(30).Build();
+                new PushData {
+                    Priority = PushData.PushPriority.RequireAck,
+                    Retry = 30
+                }.Verify();
             }, "RequireAck success without expire");
             Assert.Throws(typeof(PushRequestException), () => {
-                new PushDataBuilder().Priority(PushData.PushPriority.RequireAck).Expire(30).Build();
+                new PushData {
+                    Priority = PushData.PushPriority.RequireAck,
+                    Expire = 30
+                }.Verify();
             }, "RequireAck success without retry");
             Assert.Throws(typeof(PushRequestException), () => {
-                new PushDataBuilder().Priority(PushData.PushPriority.RequireAck).Retry(1).Expire(1).Build();
+                new PushData {
+                    Priority = PushData.PushPriority.RequireAck,
+                    Retry = 1,
+                    Expire = 1
+                }.Verify();
             }, "RequireAck success with short retry");
             Assert.Throws(typeof(PushRequestException), () => {
-                new PushDataBuilder().Priority(PushData.PushPriority.RequireAck).Retry(30).Expire(11000).Build();
+                new PushData {
+                    Priority = PushData.PushPriority.RequireAck,
+                    Retry = 30,
+                    Expire = 11000
+                }.Verify();
             }, "RequireAck success with long expire");
             Assert.DoesNotThrow(() => {
-                new PushDataBuilder().Priority(PushData.PushPriority.RequireAck).Retry(30).Expire(30).Build();
+                new PushData {
+                    Priority = PushData.PushPriority.RequireAck,
+                    Retry = 30,
+                    Expire = 30
+                }.Verify();
             }, "RequireAck failure when valid");
             Assert.DoesNotThrow(() => {
-                new PushDataBuilder().Priority(PushData.PushPriority.Notify).Build();
+                new PushData {
+                    Priority = PushData.PushPriority.Notify
+                }.Verify();
             }, "Non RequireAck failure when valid");
         });
     }

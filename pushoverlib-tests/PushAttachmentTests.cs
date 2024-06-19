@@ -6,10 +6,8 @@ using static CoolandonRS.pushoverlib.PushAttachment.Types;
 namespace pushoverlib_tests; 
 
 public class PushAttachmentTests {
-    private const PushAttachment.Types Base64 = PushAttachment.Types.Base64; // to solve ambiguity
-    
     [Test]
-    public void EvaluateImageType([Range(1, 6, 1)] int typeInt) {
+    public void EvaluateImageType([Range(0, 6, 1)] int typeInt) {
         var type = (PushAttachment.Types)typeInt;
         var attach = new PushAttachment(new byte[1], type, "name");
         Assert.That(attach.EvaluateType(), Is.EqualTo("image/" + type.ToString().ToLower()), type + " failed to evaluate");
@@ -18,7 +16,6 @@ public class PushAttachmentTests {
     [Test]
     public void EvaluateTypeOddities() {
         Assert.Multiple(() => {
-            Assert.That(new PushAttachment(new byte[1], Base64, "").EvaluateType(), Is.EqualTo("attachment_base64"), "Base64 fail");
             Assert.That(new PushAttachment(new byte[1], SvgXml, "").EvaluateType(), Is.EqualTo("image/svg+xml"), "SvgXml fail");
         });
     }
@@ -26,8 +23,8 @@ public class PushAttachmentTests {
     [Test]
     public void IsBase64() {
         Assert.Multiple(() => {
-            Assert.That(new PushAttachment(new byte[1], PushAttachment.Types.Base64, "").IsBase64(), Is.True, "Truthy base64 failure");
-            Assert.That(new PushAttachment(new byte[1], Png, "").IsBase64(), Is.False, "Falsey base64 success");
+            Assert.That(new PushAttachment(new byte[1], Png).IsBase64, Is.True, "Truthy base64 failure");
+            Assert.That(new PushAttachment(new byte[1], Png, "").IsBase64, Is.False, "Falsy base64 success");
         });
     }
 

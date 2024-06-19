@@ -12,7 +12,7 @@ public class PushClientTests {
     public void SingleSetUp() {
         server = new TestServer(30002);
         PushCommunicator.TestMode(30002);
-        defData = new PushDataBuilder().Build();
+        defData = new PushData();
         defResult = new PushResult(JsonDocument.Parse(PushResultTests.success).RootElement);
     }
 

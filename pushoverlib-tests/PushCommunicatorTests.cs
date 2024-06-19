@@ -18,7 +18,7 @@ public class PushCommunicatorTests {
         });
         server.Start();
         PushCommunicator.TestMode(30000);
-        defData = new PushDataBuilder().Build().AddNeeded(" ", " ", " ");
+        defData = new PushData().AddNeeded(" ", " ", " ");
     }
 
     [SetUp]
@@ -50,22 +50,26 @@ public class PushCommunicatorTests {
     // Kinda sucks, but a decent enough way since I can't think of another one
     [Test]
     public void SendAsyncDataType() {
-        Assert.Multiple(async () => {
+        Assert.Multiple(async Task () => {
             Respond(200, PushResultTests.success);
             ExpectType("application/x-www-form-urlencoded");
             await PushCommunicator.SendAsync(defData);
             Console.WriteLine("Blank Data Success");
-            await PushCommunicator.SendAsync(new PushDataBuilder().PushAttachment(new PushAttachment(new byte[1], PushAttachment.Types.Base64, "abc")).Build().AddNeeded("", "", ""));
+            await PushCommunicator.SendAsync(new PushData {
+                Attachment = new PushAttachment(new byte[1], PushAttachment.Types.Png)
+            }.AddNeeded("", "", ""));
             Console.WriteLine("Base64 Attachment Success");
             ExpectType("multipart/form-data");
-            await PushCommunicator.SendAsync(new PushDataBuilder().PushAttachment(new PushAttachment(new byte[1], PushAttachment.Types.Png, "abc")).Build().AddNeeded(" ", " ", " "));
+            await PushCommunicator.SendAsync(new PushData {
+                Attachment = new PushAttachment(new byte[1], PushAttachment.Types.Png, "abc")
+            }.AddNeeded(" ", " ", " "));
             Console.WriteLine("Attachment Success");
         });
     }
 
     [Test]
     public void ReceiptResponseHandling() {
-        Assert.Multiple(async () => {
+        Assert.Multiple(async Task () => {
             Respond(400);
             Assert.ThrowsAsync(typeof(PushServerException), async () => {
                 await PushCommunicator.GetReceiptResult("", "");
